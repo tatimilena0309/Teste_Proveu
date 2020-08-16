@@ -1,0 +1,11 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<form class="conteudo" method="POST" action="/calculo">
+    <h4>Horário de entrada:</h4>
+    <input type="text" name="hora_inicial">
+    <h4>Horário de saída:</h4>
+    <input type="text" name="hora_final">
+<button type="submit">Calcular </button>
+</form>
+{% endblock content %}
