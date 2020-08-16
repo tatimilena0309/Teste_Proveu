@@ -6,6 +6,7 @@ let horaNoturna = 0
 let acumuladoFull = 0
 
 exports.post = function (req, res) {
+
     const validacao = validacoes(req.body);
 
     if (validacao !== '') {
@@ -21,6 +22,89 @@ exports.post = function (req, res) {
         momentFinal.add(1, 'day')
     }
     const totalTrabalhado = Math.abs(moment.duration(momentInicial.diff(momentFinal)))
+
+    if (momentInicial >= periodos.LIMITE_INFERIOR && momentInicial <= periodos.LIMITE_SUPERIOR) {
+
+        horaDiurna = Math.abs(moment.duration(momentInicial.diff(periodos.LIMITE_SUPERIOR)))
+        momentInicial.add(horaDiurna, 'milliseconds')
+
+        if (momentFinal < periodos.LIMITE_2359) {
+
+            horaNoturna = Math.abs(moment.duration(momentFinal.diff(periodos.LIMITE_2359)))
+            momentInicial.add(horaNoturna, 'milliseconds')
+            momentInicial.add(1, 'second')
+            acumuladoFull = horaDiurna + horaNoturna
+
+
+            let faltante = totalTrabalhado - acumuladoFull
+            if (totalTrabalhado != acumuladoFull) {
+                horaDiurna = horaDiurna + faltante
+            }
+
+        } else {
+            horaNoturna = Math.abs(moment.duration(momentInicial.diff(periodos.LIMITE_2359)))
+            momentInicial.add(horaNoturna, 'milliseconds')
+            momentInicial.add(1, 'second')
+            acumuladoFull = horaNoturna + horaDiurna
+
+            if (acumuladoFull != totalTrabalhado) {
+
+                if (momentInicial.day() != periodos.LIMITE_INFERIOR.day()) {
+                    periodos.LIMITE_INFERIOR.add(1, "day")
+                }
+
+                let parcialNoturno = Math.abs(moment.duration(momentInicial.diff(periodos.LIMITE_INFERIOR)))
+
+                horaNoturna = parcialNoturno + horaNoturna
+                acumuladoFull = horaNoturna + horaDiurna
+                let faltante = totalTrabalhado - acumuladoFull
+
+
+                if (totalTrabalhado != acumuladoFull) {
+                    horaDiurna = horaDiurna + faltante
+                }
+            }
+            acumuladoFull = horaNoturna + horaDiurna
+
+            formatPeriodo(res, horaDiurna, horaNoturna)
+        }
+
+        formatPeriodo(res, horaDiurna, horaNoturna)
+
+    } else {
+
+        if (momentInicial >= periodos.LIMITE_SUPERIOR && momentInicial <= periodos.LIMITE_2359) {
+
+            horaNoturna = Math.abs(moment.duration(momentInicial.diff(periodos.LIMITE_2359)))
+            momentInicial.add(horaNoturna, 'milliseconds')
+            momentInicial.add(1, 'second')
+
+        }
+
+        if (momentInicial.day() != periodos.LIMITE_INFERIOR.day()) {
+            periodos.LIMITE_INFERIOR.add(1, "day")
+        }
+
+        if (momentInicial <= periodos.LIMITE_INFERIOR) {
+
+            let parcialNoturno = Math.abs(moment.duration(momentInicial.diff(periodos.LIMITE_INFERIOR)))
+            momentInicial.add(parcialNoturno, 'milliseconds')
+            horaNoturna = horaNoturna + parcialNoturno
+
+            acumuladoFull = horaNoturna + horaDiurna
+
+            let faltante = totalTrabalhado - acumuladoFull
+
+            if (acumuladoFull != totalTrabalhado) {
+                horaDiurna = horaDiurna + faltante
+
+            }
+            acumuladoFull = horaNoturna + horaDiurna
+
+            formatPeriodo(res, horaDiurna, horaNoturna)
+        }
+
+    }
 
 }
 
@@ -45,8 +129,5 @@ function setMoment(horario) {
 
 function formatPeriodo(res, horaDiurna, horaNoturna) {
 
-    //res.send("Horas diurnas: " + 
-    //moment.utc(horaDiurna).format('HH:mm') + " | " + " Horas Noturnas: " + 
-    //moment.utc(horaNoturna).format('HH:mm'))
-    res.send("Horas diurnas: " + horaDiurna + " | " + " Horas Noturnas: " + horaNoturna)
+res.send("Horas diurnas: " +horaDiurna + " | " + " Horas Noturnas: " + horaNoturna)
 }
