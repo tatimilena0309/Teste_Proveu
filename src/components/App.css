@@ -2,14 +2,16 @@
     display: flex; 
     flex-wrap: wrap;
 }
+html{
+    font-family: 'Pangolin', cursive !important;
+}
 body{
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Pangolin', cursive !important;
     font-weight: 300;
     font-size: 1.4rem;
     background-color: #444;
     color: #fff;
     text-align: center;
-    font-family: 'Pangolin', cursive;
 }
 h1,h2{
     font-weight: 300;
