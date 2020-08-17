@@ -3,7 +3,7 @@ Desafio prático Proveu
 
 #Getting started
 
-NodeJs
+NodeJs,
 Npm
 
 #Desenvolvimento
