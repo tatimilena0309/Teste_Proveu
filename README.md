@@ -10,8 +10,11 @@ Npm
 
 cd "seu diretório"
 git clone "https://github.com/tatimilena0309/Teste_Proveu.git"
+
 Abra no seu editor favorito
+
 No terminal execute: npm install  (para instalar as dependências)
+
 Para iniciar:  npm start
 
 #Features
