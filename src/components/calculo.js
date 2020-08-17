@@ -1,20 +1,17 @@
 const moment = require('moment');
-const precise = require('moment-precise-range-plugin');
 const periodos = require('./periodos');
+
 let horaDiurna = 0
 let horaNoturna = 0
 let acumuladoFull = 0
+let horaFormatada = '';
 
-exports.post = function (req, res) {
 
-    const validacao = validacoes(req.body);
+exports.post = function (values) {
 
-    if (validacao !== '') {
-        return res.send(validacao);
-    }
-
-    let momentInicial = setMoment(req.body.hora_inicial)
-    let momentFinal = setMoment(req.body.hora_final)
+    let horaInicial = values.horaInicial;
+    let momentInicial = setMoment(values.horaInicial)
+    let momentFinal = setMoment(values.horaFinal)
 
     const duration = moment.duration(momentInicial.diff(momentFinal))
 
@@ -27,6 +24,7 @@ exports.post = function (req, res) {
 
         horaDiurna = Math.abs(moment.duration(momentInicial.diff(periodos.LIMITE_SUPERIOR)))
         momentInicial.add(horaDiurna, 'milliseconds')
+
 
         if (momentFinal < periodos.LIMITE_2359) {
 
@@ -66,10 +64,10 @@ exports.post = function (req, res) {
             }
             acumuladoFull = horaNoturna + horaDiurna
 
-            formatPeriodo(res, horaDiurna, horaNoturna)
+            horaFormatada = formatPeriodo(horaDiurna, horaNoturna)
         }
 
-        formatPeriodo(res, horaDiurna, horaNoturna)
+        horaFormatada = formatPeriodo(horaDiurna, horaNoturna)
 
     } else {
 
@@ -101,13 +99,14 @@ exports.post = function (req, res) {
             }
             acumuladoFull = horaNoturna + horaDiurna
 
-            formatPeriodo(res, horaDiurna, horaNoturna)
+            horaFormatada = formatPeriodo(horaDiurna, horaNoturna)
         }
-
     }
 
+    return horaFormatada
 }
 
+/*
 function validacoes(values) {
     const keys = Object.keys(values)
     let msg = '';
@@ -118,7 +117,7 @@ function validacoes(values) {
     }
 
     return msg;
-}
+}*/
 
 function setMoment(horario) {
     let dataSplit = horario.split(':');
@@ -127,7 +126,25 @@ function setMoment(horario) {
     return moment().set({ 'hour': hora, 'minute': minutos, 'second': 0, 'millisecond': 0 })
 }
 
-function formatPeriodo(res, horaDiurna, horaNoturna) {
+function formatPeriodo(horaDiurna, horaNoturna) {
 
-res.send("Horas diurnas: " +horaDiurna + " | " + " Horas Noturnas: " + horaNoturna)
+
+    return "Horas diurnas: " + convertMilisegundosHora(horaDiurna) + " | " + " Horas Noturnas: " + convertMilisegundosHora(horaNoturna)
+
+    }
+
+function convertMilisegundosHora(tempo) {
+
+    let tempHora = 0
+    let tempMinuto = 0
+    let temp = tempo / 1000 //de milisegundos para segundos
+    temp = temp / 60 //minutos
+    tempHora = parseInt(temp / 60) //horas parte inteira
+    tempMinuto = Math.round(temp % 60) //minutos resto da divisão
+    if (tempMinuto == 60) {
+        tempHora += 1
+        tempMinuto = 0
+    }
+
+    return tempHora.toString().padStart(2, "0") + ':' + tempMinuto.toString().padStart(2, "0")
 }
