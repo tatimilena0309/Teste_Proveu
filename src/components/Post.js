@@ -77,7 +77,7 @@ export default class Post extends React.Component {
     render() {
         return (
             <div>
-                <h2> {this.props.title} </h2>
+                <h3> {this.props.title} </h3>
                 <div class="row">
                     <form class="col s12" onSubmit={this.handleSubmit}>
                         <div class="row">
@@ -102,12 +102,10 @@ export default class Post extends React.Component {
                                     maxLength='5'
                                 />
                                 <label for="icon_hora_final">Hora Final</label>
-
-
                             </div>
                         </div>
                         <div class="row">
-                            <div class="input-field col s6">
+                            <div class="input-field col s3 offset-s9">
                                 <button class="btn waves-effect waves-light" type="submit" name="action">Calcular
                                     <i class="material-icons right">send</i>
                                 </button>

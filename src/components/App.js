@@ -11,8 +11,8 @@ export default class App extends React.Component {
                     
                     <div>
                         <nav>
-                            <div class="nav-wrapper teal darken-4 ">
-                            <a href="#" class="brand-logo right">Jornada</a>
+                            <div class="nav-wrapper teal darken-4 " >
+                            <a href="#" class="brand-logo right">APP Jornada </a>
                             </div>
                         </nav>            
                         <Post title="Informe a Jornada: " />
