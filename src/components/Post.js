@@ -34,22 +34,28 @@ export default class Post extends React.Component {
         if (this.validInput(this.state.newJourneyInit) && this.validInput(this.state.newJourneyFinish)) {
 
             let jornadas = '';
+            console.log("JORNADAS antes")
+            console.log(jornadas)
             jornadas = Calculo.post({ horaInicial: this.state.newJourneyInit, horaFinal: this.state.newJourneyFinish });
-
+            console.log("JORNADAS depois")
+            console.log(jornadas)
             this.setState({
                 comments: [
-                    ...this.state.comments,
+
                     {
                         textInit: this.state.newJourneyInit,
                         textFinish: this.state.newJourneyFinish,
                         textJornada: jornadas
-                    }
+
+                    },
+                    ...this.state.comments
                 ],
                 invalids: [{ textInvalid: '' }]
             });
 
 
             this.setState({ newJourneyInit: '', newJourneyFinish: '', jornada: '' });
+            jornadas = '';
 
         } else {
 
