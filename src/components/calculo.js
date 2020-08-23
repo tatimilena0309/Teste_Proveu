@@ -107,7 +107,7 @@ exports.post = function (values) {
                 }
             }
         }
-        horaFormatada = formatPeriodo(horaDiurna, horaNoturna)
+     horaFormatada = formatPeriodo(horaDiurna, horaNoturna)
     } else { //comecei na jornada noturna
         if (momentInicial >= periodos.LIMITE_SUPERIOR && momentFinal <= periodos.LIMITE_2359) {
             parcialNoturno = Math.abs(moment.duration(momentFinal.diff(momentInicial)))

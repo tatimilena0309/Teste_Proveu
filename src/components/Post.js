@@ -34,11 +34,9 @@ export default class Post extends React.Component {
         if (this.validInput(this.state.newJourneyInit) && this.validInput(this.state.newJourneyFinish)) {
 
             let jornadas = '';
-            console.log("JORNADAS antes")
-            console.log(jornadas)
+
             jornadas = Calculo.post({ horaInicial: this.state.newJourneyInit, horaFinal: this.state.newJourneyFinish });
-            console.log("JORNADAS depois")
-            console.log(jornadas)
+
             this.setState({
                 comments: [
 
@@ -60,9 +58,10 @@ export default class Post extends React.Component {
         } else {
 
             this.setState({
-                invalids: [
-                    { textInvalid: 'Campos inválidos: 00:00 até 23:59' }
-                ]
+                invalids:
+                    [{ textInvalid: 'Campos inválidos: 00:00 até 23:59' }],
+                     newJourneyInit: '', newJourneyFinish: '', jornada: '' 
+
             });
         }
         e.preventDefault();
@@ -95,6 +94,7 @@ export default class Post extends React.Component {
                                     onChange={this.handleTextChangeInit}
                                     placeholder='00:00'
                                     maxLength='5'
+                                    pattern="[0-9]{2}:[0-9]{2}$" 
                                 />
                                 <label for="icon_hora_inicial">Hora Inicial</label>
                             </div>
@@ -106,6 +106,7 @@ export default class Post extends React.Component {
                                     onChange={this.handleTextChangeFinish}
                                     placeholder='00:00'
                                     maxLength='5'
+                                    pattern="[0-9]{2}:[0-9]{2}$" 
                                 />
                                 <label for="icon_hora_final">Hora Final</label>
                             </div>
@@ -121,35 +122,15 @@ export default class Post extends React.Component {
                     </form>
                 </div>
                 <div>
-                    {/*<form onSubmit={this.handleSubmit}>
-                    <label for='' > Hora inicial:</label>
-                    <input
-                        value={this.state.newJourneyInit}
-                        onChange={this.handleTextChangeInit}
-                        placeholder='00:00'
-                        maxLength='5'
-                    />
-                    <label for='' > Hora final:</label>
-                    <input
-                        value={this.state.newJourneyFinish}
-                        onChange={this.handleTextChangeFinish}
-                        placeholder='00:00'
-                        maxLength='5'
-                    />
-                    <br />
-
-                    
-                    <button class="btn waves-effect waves-light" type="submit" name="action">Calcular
-                        <i class="material-icons right">send</i>
-                    </button>
-                </form>*/}
 
                     {
                         this.state.invalids.map((invalid, index) => {
-                            return <Invalid key={index} invalidText={invalid.invalidText} />
+                            return <Invalid key={index} invalidText={invalid.textInvalid} />
                         })
                     }
-
+                </div>
+                
+                <div>
                     {
                         this.state.comments.map((comment, index) => {
                             return <Comment key={index} textInit={comment.textInit} textFinish={comment.textFinish} textJornada={comment.textJornada} />
